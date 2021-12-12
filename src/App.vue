@@ -1,27 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div>
+    {{ data }}
+  </div>
+  <div v-if="isLoading">Loading data...</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
-
-export default defineComponent({
-  name: "App",
-  components: {
-    HelloWorld,
-  },
+<script lang="ts" setup>
+import { fetchData } from "@/server";
+import { onMounted, ref } from "vue";
+const data = ref<number>(0);
+const isLoading = ref<boolean>(false);
+onMounted(async () => {
+  isLoading.value = true;
+  data.value = await fetchData();
+  isLoading.value = false;
 });
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
