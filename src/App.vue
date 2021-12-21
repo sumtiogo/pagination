@@ -5,6 +5,7 @@
     <p>{{ d.content }}</p>
   </article>
   <div v-if="isLoading">Loading data...</div>
+  <button @click="loadMore">More</button>
 </template>
 
 <script lang="ts" setup>
@@ -17,4 +18,14 @@ onMounted(async () => {
   data.value = await fetchData();
   isLoading.value = false;
 });
+window.addEventListener("scroll", () => {
+  console.log("scrolling");
+});
+
+async function loadMore() {
+  isLoading.value = true;
+  const posts = await fetchData();
+  data.value.push(...posts);
+  isLoading.value = false;
+}
 </script>
