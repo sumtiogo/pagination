@@ -5,7 +5,6 @@
     <p>{{ d.content }}</p>
   </article>
   <div v-if="isLoading">Loading data...</div>
-  <button @click="loadMore">More</button>
 </template>
 
 <script lang="ts" setup>
@@ -28,4 +27,15 @@ async function loadMore() {
   data.value.push(...posts);
   isLoading.value = false;
 }
+
+onMounted(() => {
+  document.addEventListener("scroll", () => {
+    if (
+      window.innerHeight + Math.ceil(window.pageYOffset) >=
+      document.body.offsetHeight
+    ) {
+      loadMore();
+    }
+  });
+});
 </script>
