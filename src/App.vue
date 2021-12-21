@@ -17,9 +17,6 @@ onMounted(async () => {
   data.value = await fetchData();
   isLoading.value = false;
 });
-window.addEventListener("scroll", () => {
-  console.log("scrolling");
-});
 
 async function loadMore() {
   isLoading.value = true;
@@ -28,14 +25,28 @@ async function loadMore() {
   isLoading.value = false;
 }
 
+function debounce<Params extends any[]>(
+  func: (...args: Params) => any,
+  timeout: number
+): (...args: Params) => void {
+  let timer: number;
+  return (...args: Params) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+}
+function monitorReachBottom() {
+  console.log("so busy");
+  if (
+    window.innerHeight + Math.ceil(window.pageYOffset) >=
+    document.body.offsetHeight
+  ) {
+    loadMore();
+  }
+}
 onMounted(() => {
-  document.addEventListener("scroll", () => {
-    if (
-      window.innerHeight + Math.ceil(window.pageYOffset) >=
-      document.body.offsetHeight
-    ) {
-      loadMore();
-    }
-  });
+  document.addEventListener("scroll", debounce(monitorReachBottom, 200));
 });
 </script>
